@@ -34,7 +34,7 @@ const Preview = () => {
   const handleDownload = async () => {
     const apiUrl = "https://api.apiflash.com/v1/urltoimage";
     const apiKey = "cc9b4c9c69804077bdace6d42a1c944d";
-    const tweetCardUrl = "https://www.google.com"; // Use the URL of your tweet card page
+    const tweetCardUrl = "https://twitterpostgenerator.netlify.app/preview"; // Use the URL of your tweet card page
 
     try {
       const response = await axios.get(apiUrl, {
