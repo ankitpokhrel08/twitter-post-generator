@@ -1,4 +1,6 @@
-import axios from "axios";
+import { toPng } from "html-to-image";
+// import domtoimage from "dom-to-image-more";
+// import axios from "axios";
 // import html2canvas from "html2canvas";
 import {
   MessageSquare,
@@ -31,32 +33,57 @@ const Preview = () => {
     navigate("/home");
   };
 
-  const handleDownload = async () => {
-    const apiUrl = "https://api.apiflash.com/v1/urltoimage";
-    const apiKey = "cc9b4c9c69804077bdace6d42a1c944d";
-    const tweetCardUrl = "https://twitterpostgenerator.netlify.app/preview" ; // Use the URL of your tweet card page
+  const handleDownload = () => {
+    const tweetCard = document.querySelector(".post3"); // Select the element to capture
 
-    try {
-      const response = await axios.get(apiUrl, {
-        params: {
-          access_key: apiKey,
-          wait_until: "page_loaded", // Wait until the page fully loads
-          url: tweetCardUrl, // URL of the page you want to capture
-        },
-        responseType: "blob", // This will ensure you get the image file
+    toPng(tweetCard, {
+      quality: 1, // High-quality output
+      backgroundColor: "black", // Background color (black for dark mode)
+      canvasWidth: tweetCard.offsetWidth * 2, // Adjust for scaling
+      canvasHeight: tweetCard.offsetHeight * 2,
+      style: {
+        transform: "scale(2)", // Double the resolution
+        transformOrigin: "top left", // Scale from top-left corner
+      },
+    })
+      .then((dataUrl) => {
+        // Trigger download
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = "tweet-card.png";
+        link.click();
+      })
+      .catch((error) => {
+        console.error("Failed to generate image:", error);
       });
-
-      // Create a link element to trigger the download
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(response.data); // Create a temporary URL for the image
-      link.download = "tweet_image.png"; // Specify the filename
-      document.body.appendChild(link);
-      link.click(); // Trigger the download
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading the image:", error);
-    }
   };
+
+  // const handleDownload = async () => {
+  //   const apiUrl = "https://api.apiflash.com/v1/urltoimage";
+  //   const apiKey = "cc9b4c9c69804077bdace6d42a1c944d";
+  //   const tweetCardUrl = "https://twitterpostgenerator.netlify.app/preview" ; // Use the URL of your tweet card page
+
+  //   try {
+  //     const response = await axios.get(apiUrl, {
+  //       params: {
+  //         access_key: apiKey,
+  //         wait_until: "page_loaded", // Wait until the page fully loads
+  //         url: tweetCardUrl, // URL of the page you want to capture
+  //       },
+  //       responseType: "blob", // This will ensure you get the image file
+  //     });
+
+  //     // Create a link element to trigger the download
+  //     const link = document.createElement("a");
+  //     link.href = URL.createObjectURL(response.data); // Create a temporary URL for the image
+  //     link.download = "tweet_image.png"; // Specify the filename
+  //     document.body.appendChild(link);
+  //     link.click(); // Trigger the download
+  //     document.body.removeChild(link);
+  //   } catch (error) {
+  //     console.error("Error downloading the image:", error);
+  //   }
+  // };
 
   // const handleDownload = () => {
   //   const tweetCard = document.querySelector(".post3");
@@ -95,6 +122,7 @@ const Preview = () => {
               className="w-8 h-8 rounded-full md:w-10 md:h-10"
               src={imageUrl}
               alt="DP"
+              crossOrigin="anonymous"
             />
           </div>
           <div className="w-full profile-content">
