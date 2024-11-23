@@ -119,7 +119,7 @@ const HomePage = () => {
             <textarea
               id="post"
               name="post"
-              placeholder="Write your post (maximum 100 words)"
+              placeholder="Write your post"
               value={formData.post}
               onChange={handleChange}
               rows="5"
